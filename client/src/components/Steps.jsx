@@ -11,7 +11,7 @@ const Steps = () => {
     viewport={{once: true}}
     className='flex flex-col items-center justify-center my-48'>
         <h1 className='text-3xl sm:text-4xl font-semibold mb-2'>How it works</h1>
-        <p className='text-lg text-gray-600 mb-8'>Transform Words Into Stunning Image</p>
+        <p className='text-lg text-gray-600 mb-8'>Effortlessly Extract Invoice Data</p>
         <div className='space-y-4 w-full max-w-3xl text-sm'>
             {stepsData.map((step, index) => (
                 <div className='flex items-center gap-4 p-5 px-8 bg-white/20 shadow-md border cursor-pointer hover:scale-[1.02] transition-all duration-300 rounded-lg' key={index}>

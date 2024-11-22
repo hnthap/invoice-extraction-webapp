@@ -19,8 +19,6 @@ const AppContextProvider = (props) => {
     const loadCreditsData = async () =>{
         try {
             const {data} = await axios.get(backendUrl + '/api/user/credits', {headers: {token}})
-
-            console.log(data);
             if(data.success) {
                 setCredit(data.credits)
                 setUser(data.user)
@@ -31,9 +29,9 @@ const AppContextProvider = (props) => {
         }
     }
 
-    const generateImage = async (prompt)=>{
+    const generateImage = async (input)=>{
         try {
-            const {data} = await axios.post(backendUrl + '/api/image/generate-image', {prompt}, {headers: {token}})
+            const {data} = await axios.post(backendUrl + '/api/image/generate-image', {input}, {headers: {token}})
             if(data.success) {
                 loadCreditsData()
                 return data.resultImage
