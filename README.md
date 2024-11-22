@@ -44,14 +44,14 @@
 *** See the bottom of this document for the declaration of the reference variables
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
+***[![Contributors][contributors-shield]][contributors-url]
+***[![Forks][forks-shield]][forks-url]
+***[![Stargazers][stars-shield]][stars-url]
+***[![Issues][issues-shield]][issues-url]
+***[![MIT License][license-shield]][license-url]
+***[![LinkedIn][linkedin-shield]][linkedin-url]
+-->
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -83,7 +83,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]]
+![Product Name Screen Shot](client/src/assets/main.png)
 
 We have developed a web application that quickly and effortlessly converts invoice images into text. The goal of this project is to help users save time and effort in managing invoices and financial information.
 
