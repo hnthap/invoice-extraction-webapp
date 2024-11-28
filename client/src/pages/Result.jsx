@@ -41,20 +41,16 @@ const Result = () => {
     }
 };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result);
-        // setInput(reader.result);
-        setLoading(false);
-        setIsImageLoaded(false);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+const handleDrop = (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+      setImage(URL.createObjectURL(file));
+      setInput(file);
+      setLoading(false);
+      setIsImageLoaded(false);
+  }
+};
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -62,7 +58,7 @@ const Result = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result);  
-        // setInput(reader.result);
+        setInput(file);
         setLoading(false);
         setIsImageLoaded(false);
       };
@@ -180,7 +176,6 @@ const Result = () => {
                 </button>
               </div>
               <div className='rounded-bl-lg rounded-br-lg overflow-auto'>
-                {/* <img src={image} alt="Manipulated" className='w-full h-auto p-1'/> */}
                 <p className='p-1'>{text}</p>
               </div>
             </div>

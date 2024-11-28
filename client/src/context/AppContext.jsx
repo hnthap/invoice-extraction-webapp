@@ -31,9 +31,13 @@ const AppContextProvider = (props) => {
 
     const generateImage = async (input)=>{
         try {
-            const {data} = await axios.post(backendUrl + '/api/image/generate-image', {input}, {headers: {token}})
+            const formData = new FormData();
+            formData.append('input', input);
+
+            const {data} = await axios.post(backendUrl + '/api/image/generate-image', formData, {headers: {'Content-Type': 'multipart/form-data', token}})
             if(data.success) {
                 loadCreditsData()
+                console.log(data.resultImage)
                 return data.resultImage
             }else{
                 toast.error(data.message)
