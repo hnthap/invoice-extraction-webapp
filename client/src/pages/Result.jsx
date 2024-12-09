@@ -27,6 +27,7 @@ const Result = () => {
     try {
         if (input) {
           const jsonData  = await generateImage(input);
+          console.log(jsonData);
             if (jsonData) {
                 setIsImageLoaded(true);
                 setText(jsonData);
