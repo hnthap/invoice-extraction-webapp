@@ -8,16 +8,16 @@ import { toast } from 'react-toastify'
 const Result = () => {
 
   const [image, setImage] = useState(assets.blank)
-  const [text, setText] = useState('Hello')
   const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
-  // Input : image base64
-  const [input, setInput] = useState('Flying Cats')
-  const [scale, setScale] = useState(1);
-  const [stretch, setStretch] = useState(0);
   const [selectedButton, setSelectedButton] = useState('parsed');
 
-  // Output: image base64 and text string
+  const [input, setInput] = useState('Flying Cats')
+  const [result, setResult] = useState()
+
+  const [scale, setScale] = useState(1);
+  const [stretch, setStretch] = useState(0);
+
   const {generateImage} = useContext(AppContext)
 
   const onSubmitHandler = async (e) => {
@@ -30,7 +30,7 @@ const Result = () => {
           console.log(jsonData);
             if (jsonData) {
                 setIsImageLoaded(true);
-                setText(jsonData);
+                setResult(jsonData);
             } else {
                 toast.error(error.message || "Image generation failed.");
             }
@@ -67,8 +67,6 @@ const handleDrop = (e) => {
     }
   };
 
-
-
   const handleZoomIn = () => {
       setScale(scale + 0.1);
   };
@@ -87,15 +85,20 @@ const handleDrop = (e) => {
     setScale(1);
   };
 
-  const handleParsed = () => {
-    setSelectedButton('parsed');
-    // Thực hiện các hành động khác nếu cần
+  const getInvoiceData = (data) => {
+    if (data == null) {
+      return { menuItems: [], subTotal: 0, tax: 0, total: 0 };
+    }
+  
+    const menuItems = data.pr_parse.slice(0, 5);
+    const subTotal = data.pr_parse[5][0]["sub_total.subtotal_price"] || 0;
+    const tax = data.pr_parse[5][1]["sub_total.tax_price"] || 0;
+    const total = data.pr_parse[6][0]["total.total_price"] || 0;
+  
+    return { menuItems, subTotal, tax, total };
   };
-
-  const handleJSON = () => {
-    setSelectedButton('json');
-    // Thực hiện các hành động khác nếu cần
-  };
+  
+  const { menuItems, subTotal, tax, total } = getInvoiceData(result);
 
   return (
     <motion.form 
@@ -127,8 +130,8 @@ const handleDrop = (e) => {
             className='relative max-h-[60vh] min-h-[30vh] min-w-[120vh] 
             items-center flex justify-center cursor-pointer gap-6 rounded-lg'
           > 
-            <div className='rounded-lg border border-gray-300 flex flex-col max-h-[60vh] max-w-[60vh] min-w-[60vh] 
-            min-h-[50vh] max-h-[50vh] bg-[#f5f5f5] '>
+            <div className='rounded-lg border border-gray-300 flex flex-col max-w-[60vh] min-w-[60vh] 
+            min-h-[50vh] max-h-[50vh] bg-[#f5f5f5] overflow-auto'>
               <div className="w-full flex gap-2 items-center justify-center bg-[#ffffff] border border-gray-300 rounded-tl-lg rounded-tr-lg">
                 <button type="button" className="h-8 px-2" onClick={handleZoomIn}>
                       <img src={assets.zoom_in} alt="" className='h-6 w-auto' />
@@ -158,27 +161,82 @@ const handleDrop = (e) => {
             </div>
 
 
-            <div className='rounded-lg border border-gray-300 flex flex-col max-h-[60vh] max-w-[60vh] min-w-[60vh] 
-            min-h-[50vh] max-h-[50vh] bg-[#f5f5f5] '>
+            <div className='rounded-lg border border-gray-300 flex flex-col max-w-[60vh] min-w-[60vh] 
+            min-h-[50vh] max-h-[50vh] bg-[#f5f5f5] overflow-auto'>
               <div className="w-full flex gap-2 items-center justify-left bg-[#ffffff] border border-gray-300 rounded-tl-lg rounded-tr-lg">
                 <button
                   type="button"
                   className={`h-8 px-2 text-sm ${selectedButton === 'parsed' ? 'border-b-4 border-red-500' : ''}`}
-                  onClick={handleParsed}
+                  onClick={() => setSelectedButton('parsed')}
                 >
                   Parsed
                 </button>
                 <button
                   type="button"
                   className={`h-8 px-2 text-sm ${selectedButton === 'json' ? 'border-b-4 border-red-500' : ''}`}
-                  onClick={handleJSON}
+                  onClick={() => setSelectedButton('json')}
                 >
                   JSON
                 </button>
               </div>
-              <div className='rounded-bl-lg rounded-br-lg overflow-auto'>
-                <p className='p-1'>{text}</p>
-              </div>
+              {selectedButton === 'json' ? (
+                <div className="rounded-bl-lg rounded-br-lg overflow-auto" style={{ fontSize: '18px' }}>
+                    <pre className="p-1">
+                        {JSON.stringify(result, null, 2)}
+                    </pre>
+                </div>
+              )
+              :
+              (
+                <div style={{fontSize: '18px', padding: '10px'}}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                        <thead>
+                          <tr>
+                            <th style={{ textAlign: 'left' }}>Name</th>
+                            <th style={{  }}>Quantity</th>
+                            <th style={{  }}>Price</th>
+                            <th style={{  }}>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {menuItems.map((item, index) => {
+                            const menuName = item.find(obj => obj["menu.nm"])?.["menu.nm"] || "";
+                            const quantity = item.find(obj => obj["menu.cnt"])?.["menu.cnt"] || "";
+                            const price = item.find(obj => obj["menu.price"])?.["menu.price"] || "";
+                            
+                            const quantityNumber = parseFloat(quantity);
+                            const priceNumber = parseFloat(price.replace(/,/g, '')) || 0;
+                            const total = quantityNumber * priceNumber;
+
+                            return (
+                              <tr key={index}>
+                                <td style={{ }}>{menuName}</td>
+                                <td style={{ textAlign: 'center' }}>{quantity}</td>
+                                <td style={{ textAlign: 'right' }}>{price}</td>
+                                <td style={{ textAlign: 'right' }}>{total}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', marginRight: '10px' }}>
+                        <tbody>
+                          <tr>
+                            <td style={{ fontWeight: 'bold', textAlign: 'right', paddingTop: '10px'}}>Sub Total</td>
+                            <td style={{ textAlign: 'right', borderTop: '1px solid #000', paddingTop: '10px' }}>{subTotal}</td>
+                          </tr>
+                          <tr>
+                            <td style={{ fontWeight: 'bold', textAlign: 'right' }}>Tax</td>
+                            <td style={{ textAlign: 'right' }}>{tax}</td>
+                          </tr>
+                          <tr>
+                            <td style={{  fontWeight: 'bold', textAlign: 'right' }}>Total</td>
+                            <td style={{ textAlign: 'right' }}>{total}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+              )}
             </div>
             
             <span className={`absolute bottom-0 left-0 h-1 bg-blue-500 ${loading ? 'w-full transition-all duration-[10s]' : 'w-0'}`} />

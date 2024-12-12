@@ -26,7 +26,10 @@ const generateImage = async (req, res) => {
             }
         });
         if (response.data.success) {
-            const result = response.data.imageBase64Output;
+            const result = {
+                "id" : response.data.data_id,
+                "pr_parse": response.data.pr_parse,
+            }
             console.log(result);
             await userModel.findByIdAndUpdate(user._id, {creditBalance: user.creditBalance - 1})
             res.json({ success: true, message: "Image generated successfully", creditBalance: user.creditBalance - 1, result });
