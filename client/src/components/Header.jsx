@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { assets } from '../assets/assets'
 import { motion } from "framer-motion"
 import { AppContext } from '../context/AppContext'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 const Header = () => {
@@ -50,7 +50,7 @@ const Header = () => {
         initial={{opacity: 0, y: 20}}
         animate={{opacity: 1, y: 0}}
         transition={{delay: 0.6, duration: 0.8}}
-        >If you're looking to streamline your workflow, effortlessly extract invoice data in seconds—just upload your invoice and watch the process unfold.</motion.p>
+        >If you&apos;re looking to streamline your workflow, effortlessly extract invoice data in seconds—just upload your invoice and watch the process unfold.</motion.p>
 
         <motion.button onClick={onClickHandler} className='sm:text-lg text-white bg-black w-auto mt-8 
         px-12 py-2.5 flex items-center gap-2 rounded-full'

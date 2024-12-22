@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { assets } from '../assets/assets'
 import { motion } from 'framer-motion'
 import { AppContext } from '../context/AppContext'
@@ -32,7 +32,7 @@ const Result = () => {
                 setIsImageLoaded(true);
                 setResult(jsonData);
             } else {
-                toast.error(error.message || "Image generation failed.");
+                toast.error("Image generation failed.");
             }
         }
     } catch (error) {
@@ -85,20 +85,32 @@ const handleDrop = (e) => {
     setScale(1);
   };
 
-  const getInvoiceData = (data) => {
-    if (data == null) {
-      return { menuItems: [], subTotal: 0, tax: 0, total: 0 };
-    }
+  // const getInvoiceData = (data) => {
+  //   if (data == null) {
+  //     return { menuItems: [], subTotal: 0, tax: 0, total: 0 };
+  //   }
   
-    const menuItems = data.pr_parse.slice(0, 5);
-    const subTotal = data.pr_parse[5][0]["sub_total.subtotal_price"] || 0;
-    const tax = data.pr_parse[5][1]["sub_total.tax_price"] || 0;
-    const total = data.pr_parse[6][0]["total.total_price"] || 0;
+  //   const menuItems = data.pr_parse.slice(0, 5);
+  //   const subTotal = data.pr_parse[5][0]["sub_total.subtotal_price"] || 0;
+  //   const tax = data.pr_parse[5][1]["sub_total.tax_price"] || 0;
+  //   const total = data.pr_parse[6][0]["total.total_price"] || 0;
   
-    return { menuItems, subTotal, tax, total };
-  };
+  //   return { menuItems, subTotal, tax, total };
+  // };
+
+  /**
+   * 
+   * @param {{
+   *  success: true;
+   *  data: { box: number[]; piece: string; text: string }[];
+   *  visualized: string;
+   * }} result 
+   */
+  const getInvoiceData = (result) => {
+    return result?.data ?? []
+  }
   
-  const { menuItems, subTotal, tax, total } = getInvoiceData(result);
+  // const { menuItems, subTotal, tax, total } = getInvoiceData(result)
 
   return (
     <motion.form 
@@ -189,7 +201,7 @@ const handleDrop = (e) => {
               :
               (
                 <div style={{fontSize: '18px', padding: '10px'}}>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                      {/* <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                         <thead>
                           <tr>
                             <th style={{ textAlign: 'left' }}>Name</th>
@@ -218,8 +230,28 @@ const handleDrop = (e) => {
                             );
                           })}
                         </tbody>
+                      </table> */}
+                      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+                        <thead>
+                          <tr>
+                            <th style={{ textAlign: 'center' }}>Box</th>
+                            <th style={{ textAlign: 'center' }}>Piece</th>
+                            <th style={{ textAlign: 'center' }}>Text</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {getInvoiceData(result).map(({ box, piece, text }, index) => {
+                            return (
+                              <tr key={index}>
+                                <td style={{ textAlign: 'center' }}>{box}</td>
+                                <td style={{ textAlign: 'center' }}><img src={`data:image/jpeg;base64,${piece}`} height={20} /></td>
+                                <td style={{ textAlign: 'center' }}>{text}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
                       </table>
-                      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', marginRight: '10px' }}>
+                      {/* <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px', marginRight: '10px' }}>
                         <tbody>
                           <tr>
                             <td style={{ fontWeight: 'bold', textAlign: 'right', paddingTop: '10px'}}>Sub Total</td>
@@ -234,7 +266,7 @@ const handleDrop = (e) => {
                             <td style={{ textAlign: 'right' }}>{total}</td>
                           </tr>
                         </tbody>
-                      </table>
+                      </table> */}
                     </div>
               )}
             </div>

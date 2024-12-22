@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
 import { motion } from 'framer-motion'
@@ -101,7 +101,7 @@ const Login = () => {
             rounded-full'>{state === 'Login' ? 'Login' : 'Create Account'} </button>
 
             {state === 'Login' ?
-                <p className='mt-5 center'>Don't have an account?  
+                <p className='mt-5 center'>Don&apos;t have an account?  
                     <span className='text-blue-600 cursor-pointer' onClick={()=>setState('Sign up')}> Sign up</span></p>
             :
                 <p className='mt-5 center'>Already have an account?  
