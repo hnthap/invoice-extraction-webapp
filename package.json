@@ -1,0 +1,28 @@
+{
+  "name": "invoice_extraction_webapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "_server": "./scripts/dev_client.sh",
+    "_client": "./scripts/dev_server.sh",
+    "_____ai": "./scripts/dev_ai_server.sh",
+    "dev": "concurrently -c auto npm:_____ai npm:_server npm:_client",
+    "setup": "./scripts/setup.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hnthap/invoice_extraction_webapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hnthap/invoice_extraction_webapp/issues"
+  },
+  "homepage": "https://github.com/hnthap/invoice_extraction_webapp#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
