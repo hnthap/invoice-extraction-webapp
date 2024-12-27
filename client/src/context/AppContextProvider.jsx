@@ -25,7 +25,7 @@ const AppContextProvider = (props) => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.message);
+            toast.error(error.message, { progress: null, autoClose: 2000 });
         }
     }, [token, setCredit, setUser, backendUrl]);
 
@@ -34,19 +34,23 @@ const AppContextProvider = (props) => {
             const formData = new FormData();
             formData.append('input', input);
 
-            const {data} = await axios.post(backendUrl + '/api/image/generate-image', formData, {headers: {'Content-Type': 'multipart/form-data', token}})
+            const {data} = await axios.post(
+                backendUrl + '/api/image/generate-image', 
+                formData,
+                { headers: {'Content-Type': 'multipart/form-data', token } },
+            )
             if(data.success) {
                 loadCreditsData()
                 return data.result
             }else{
-                toast.error(data.message)
+                toast.error(data.message, { progress: null, autoClose: 2000 })
                 loadCreditsData()
                 if(data.creditsBalance === 0) {
                     navigate('/buy')
                 }
             }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message, { progress: null, autoClose: 2000 })
         }
     }
 

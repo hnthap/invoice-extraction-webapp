@@ -17,18 +17,19 @@ const generateImage = async (req, res) => {
             return res.status(400).json({ success: false, message: "Insufficient Credits", creditBalance: user.creditBalance});
         }
 
-        console.log('🦆')
+        console.log('🦆 image is ok to load to AI server, proceeding to do so')
 
-        // POST
-        // Đọc tệp hình ảnh
-        const imageBuffer = input.buffer;
-        const response = await axios.post(process.env.SCENE_TEXT_API_URL + '/api/process-image', imageBuffer, {
+        const imageBlob = new Blob([input.buffer])
+        const formData = new FormData();
+        formData.append('image', imageBlob, 'image.jpg')
+        const url = process.env.SCENE_TEXT_API_URL + '/api/process-image'
+        const response = await axios.post(url, formData, {
             headers: {
-                'Content-Type': 'application/octet-stream',
-            }
-        });
+                'Content-Type': 'multipart/form-data',
+            },
+        })
 
-        console.log('🦆🦆')
+        console.log('🦆🦆 AI server responsed with data, proceeding to response back to client')
 
         if (response.data.success) {
             // const result = {
@@ -37,8 +38,9 @@ const generateImage = async (req, res) => {
             // }
             const result = response.data;
             delete result.success;
-            console.log(result);
-            await userModel.findByIdAndUpdate(user._id, {creditBalance: user.creditBalance - 1})
+
+            await userModel.findByIdAndUpdate(user._id, {creditBalance: user.creditBalance}) // TODO: remove this
+            // await userModel.findByIdAndUpdate(user._id, {creditBalance: user.creditBalance - 1})
             res.json({
                 success: true,
                 message: "Image generated successfully",
@@ -46,7 +48,7 @@ const generateImage = async (req, res) => {
                 creditBalance: user.creditBalance, // TODO: Development only
                 result,
             });
-            console.log('🦆🦆🦆')
+            console.log('🦆🦆🦆 ok')
         }else {
             console.log(response.data.message);
             return res.status(400).json({ success: false, message: "Error processing image", details: response.data.message });

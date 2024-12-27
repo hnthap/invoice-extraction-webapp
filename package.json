@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "_server": "./scripts/dev_client.sh",
-    "_client": "./scripts/dev_server.sh",
-    "_____ai": "./scripts/dev_ai_server.sh",
-    "dev": "concurrently -c auto npm:_____ai npm:_server npm:_client",
-    "setup": "./scripts/setup.sh"
+    "ai": "./scripts/dev_ai_server.sh",
+    "server": "./scripts/dev_server.sh",
+    "client": "./scripts/dev_client.sh",
+    "dev": "concurrently -c auto npm:ai npm:server npm:client --kill-others"
   },
   "repository": {
     "type": "git",

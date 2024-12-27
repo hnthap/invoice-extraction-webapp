@@ -12,9 +12,11 @@
 
 * git v2.13+,
 * node,
-* python,
+* conda,
 
 And, of course, Internet connection (to download dependencies).
+
+On Windows, you would need to run the commands in PowerShell
 
 ## 1. Clone this repo
 
@@ -25,10 +27,15 @@ cd invoice_extraction_webapp
 
 ## 2. Set up environment and dependency
 
-
 ```bash
-chmod +x scripts/*
-npm run setup
+echo 🌱 Setting up client
+cd client
+npm install
+npm run build
+echo 🌱 Setting up server
+cd ../server
+npm install
+cd ..
 ```
 
 ## 3. Set up AI server

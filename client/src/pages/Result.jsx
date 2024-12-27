@@ -25,33 +25,32 @@ const Result = () => {
     setLoading(true);
 
     try {
-        if (input) {
-          const jsonData  = await generateImage(input);
-          console.log(jsonData);
-            if (jsonData) {
-                setIsImageLoaded(true);
-                setResult(jsonData);
-            } else {
-                toast.error("Image generation failed.");
-            }
+      if (input) {
+        const jsonData  = await generateImage(input);
+        if (jsonData) {
+          setIsImageLoaded(true);
+          setResult(jsonData);
+        } else {
+          toast.error("Image generation failed.", { progress: null, autoClose: 2000 });
         }
+      }
     } catch (error) {
-        toast.error(error.message || "An error occurred.");
+        toast.error(error.message || "An error occurred.", { progress: null, autoClose: 2000 });
     } finally {
         setLoading(false);
     }
-};
+  };
 
-const handleDrop = (e) => {
-  e.preventDefault();
-  const file = e.dataTransfer.files[0];
-  if (file && file.type.startsWith('image/')) {
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
       setImage(URL.createObjectURL(file));
       setInput(file);
       setLoading(false);
       setIsImageLoaded(false);
-  }
-};
+    }
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -85,33 +84,17 @@ const handleDrop = (e) => {
     setScale(1);
   };
 
-  // const getInvoiceData = (data) => {
-  //   if (data == null) {
-  //     return { menuItems: [], subTotal: 0, tax: 0, total: 0 };
-  //   }
-  
-  //   const menuItems = data.pr_parse.slice(0, 5);
-  //   const subTotal = data.pr_parse[5][0]["sub_total.subtotal_price"] || 0;
-  //   const tax = data.pr_parse[5][1]["sub_total.tax_price"] || 0;
-  //   const total = data.pr_parse[6][0]["total.total_price"] || 0;
-  
-  //   return { menuItems, subTotal, tax, total };
-  // };
-
   /**
    * 
    * @param {{
    *  success: true;
-   *  data: { box: number[]; piece: string; text: string }[];
-   *  visualized: string;
+   *  data: { box: number[]; piece: string; text: string; tag: string }[];
    * }} result 
    */
   const getInvoiceData = (result) => {
     return result?.data ?? []
   }
   
-  // const { menuItems, subTotal, tax, total } = getInvoiceData(result)
-
   return (
     <motion.form 
     initial={{opacity: 0.2, y: 100}}
@@ -126,7 +109,6 @@ const handleDrop = (e) => {
             onDragOver={(e) => e.preventDefault()}
             onClick={() => document.getElementById('file-upload').click()} 
           >
-
             <p className='text-gray-900'>Drag and drop or select an image here</p>
             <input
               type="file"
@@ -136,8 +118,6 @@ const handleDrop = (e) => {
               id="file-upload"
             />
           </div>
-
-
           <div
             className='relative max-h-[60vh] min-h-[30vh] min-w-[120vh] 
             items-center flex justify-center cursor-pointer gap-6 rounded-lg'
@@ -171,8 +151,6 @@ const handleDrop = (e) => {
                 />
               </div>
             </div>
-
-
             <div className='rounded-lg border border-gray-300 flex flex-col max-w-[60vh] min-w-[60vh] 
             min-h-[50vh] max-h-[50vh] bg-[#f5f5f5] overflow-auto'>
               <div className="w-full flex gap-2 items-center justify-left bg-[#ffffff] border border-gray-300 rounded-tl-lg rounded-tr-lg">
@@ -194,7 +172,18 @@ const handleDrop = (e) => {
               {selectedButton === 'json' ? (
                 <div className="rounded-bl-lg rounded-br-lg overflow-auto" style={{ fontSize: '18px' }}>
                     <pre className="p-1">
-                        {JSON.stringify(result, null, 2)}
+                        {JSON.stringify(result.data.map((item) => {
+                          let x = structuredClone(item);
+                          const box = x["box"];
+                          x["box"] = [
+                            Math.min(box[0][0], box[1][0], box[2][0], box[3][0]),
+                            Math.min(box[0][1], box[1][1], box[2][1], box[3][1]),
+                            Math.max(box[0][0], box[1][0], box[2][0], box[3][0]),
+                            Math.max(box[0][1], box[1][1], box[2][1], box[3][1]),
+                          ]
+                          delete x["piece"];
+                          return x;
+                        }), null, 2)}
                     </pre>
                 </div>
               )
@@ -237,15 +226,21 @@ const handleDrop = (e) => {
                             <th style={{ textAlign: 'center' }}>Box</th>
                             <th style={{ textAlign: 'center' }}>Piece</th>
                             <th style={{ textAlign: 'center' }}>Text</th>
+                            <th style={{ textAlign: 'center' }}>Tag</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {getInvoiceData(result).map(({ box, piece, text }, index) => {
+                          {getInvoiceData(result).map(({ box, piece, text, tag }, index) => {
                             return (
                               <tr key={index}>
-                                <td style={{ textAlign: 'center' }}>{box}</td>
+                                <td style={{ textAlign: 'center', fontSize: "small" }}>{
+                                  '[' + box
+                                  .map((pair) => pair.map((value) => Math.round(value).toString()).join(` `))
+                                  .join(`, `) + ']'
+                                }</td>
                                 <td style={{ textAlign: 'center' }}><img src={`data:image/jpeg;base64,${piece}`} height={20} /></td>
                                 <td style={{ textAlign: 'center' }}>{text}</td>
+                                <td style={{ textAlign: 'center' }}>{tag}</td>
                               </tr>
                             );
                           })}
@@ -275,9 +270,6 @@ const handleDrop = (e) => {
           </div>
           <p className={!loading ? 'hidden' : ''}>Loading...</p>
       </div>
-
-
-
       {!isImageLoaded && (
         <div className='flex items-center gap-2 mt-10'>
           <button 
@@ -289,7 +281,6 @@ const handleDrop = (e) => {
           </button>
         </div>
       )}
-      
       {isImageLoaded &&
         <div className='flex gap-8 flex-wrap justify-center text-white
         text-sm p-0.5 mt-10 rounded-full'>
