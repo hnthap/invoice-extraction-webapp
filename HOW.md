@@ -19,7 +19,7 @@ And, of course, Internet connection (to download dependencies).
 ## 1. Clone this repo
 
 ```bash
-git clone https://github.com/hnthap/invoice_extraction_webapp/tree/main --recurse-submodules
+git clone https://github.com/hnthap/invoice_extraction_webapp/tree/main --recurse-submodules --depth 1 --branch main
 cd invoice_extraction_webapp
 ```
 
