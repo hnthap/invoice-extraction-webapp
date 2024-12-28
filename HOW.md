@@ -21,7 +21,7 @@ On Windows, you would need to run the commands in PowerShell
 ## 1. Clone this repo
 
 ```bash
-git clone https://github.com/hnthap/invoice_extraction_webapp/tree/main --recurse-submodules --depth 1 --branch main
+git clone https://github.com/hnthap/invoice_extraction_webapp --recurse-submodules --depth 1 --branch main
 cd invoice_extraction_webapp
 ```
 
