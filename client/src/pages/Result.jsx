@@ -88,7 +88,13 @@ const Result = () => {
    * 
    * @param {{
    *  success: true;
-   *  data: { box: number[]; piece: string; text: string; tag: string }[];
+   *  data: {
+   *    box: number[]; 
+   *    piece: string; 
+   *    text: string; 
+   *    tag: string; 
+   *    pho_tag: string;
+   *  }[];
    * }} result 
    */
   const getInvoiceData = (result) => {
@@ -151,7 +157,7 @@ const Result = () => {
                 />
               </div>
             </div>
-            <div className='rounded-lg border border-gray-300 flex flex-col max-w-[60vh] min-w-[60vh] 
+            <div className='rounded-lg border border-gray-300 flex flex-col max-w-[80vh] min-w-[80vh] 
             min-h-[50vh] max-h-[50vh] bg-[#f5f5f5] overflow-auto'>
               <div className="w-full flex gap-2 items-center justify-left bg-[#ffffff] border border-gray-300 rounded-tl-lg rounded-tr-lg">
                 <button
@@ -223,24 +229,26 @@ const Result = () => {
                       <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
                         <thead>
                           <tr>
-                            <th style={{ textAlign: 'center' }}>Box</th>
-                            <th style={{ textAlign: 'center' }}>Piece</th>
+                            {/* <th style={{ textAlign: 'center' }}>Box</th>
+                            <th style={{ textAlign: 'center' }}>Piece</th> */}
                             <th style={{ textAlign: 'center' }}>Text</th>
-                            <th style={{ textAlign: 'center' }}>Tag</th>
+                            <th style={{ textAlign: 'center' }}>LayoutLMv3</th>
+                            <th style={{ textAlign: 'center' }}>PhoBERT</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {getInvoiceData(result).map(({ box, piece, text, tag }, index) => {
+                          {getInvoiceData(result).map(({ box, piece, text, tag, pho_tag }, index) => {
                             return (
                               <tr key={index}>
-                                <td style={{ textAlign: 'center', fontSize: "small" }}>{
+                                {/* <td style={{ textAlign: 'center', fontSize: "small" }}>{
                                   '[' + box
                                   .map((pair) => pair.map((value) => Math.round(value).toString()).join(` `))
                                   .join(`, `) + ']'
                                 }</td>
-                                <td style={{ textAlign: 'center' }}><img src={`data:image/jpeg;base64,${piece}`} height={20} /></td>
+                                <td style={{ textAlign: 'center' }}><img src={`data:image/jpeg;base64,${piece}`} height={20} /></td> */}
                                 <td style={{ textAlign: 'center' }}>{text}</td>
                                 <td style={{ textAlign: 'center' }}>{tag}</td>
+                                <td style={{ textAlign: 'center' }}>{pho_tag}</td>
                               </tr>
                             );
                           })}
@@ -262,7 +270,7 @@ const Result = () => {
                           </tr>
                         </tbody>
                       </table> */}
-                    </div>
+                </div>
               )}
             </div>
             

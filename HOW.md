@@ -28,6 +28,7 @@ cd invoice_extraction_webapp
 ## 2. Set up environment and dependency
 
 ```bash
+npm install
 echo 🌱 Setting up client
 cd client
 npm install
@@ -75,5 +76,7 @@ cd ../..
 Remember to activate the environment in the previous step, before running this.
 
 ```bash
-npm run dev
+npm run dev # To run frontend and backend
+
+npm run ai # To run AI server
 ```
