@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "ai": "./scripts/dev_ai_server.sh",
-    "server": "./scripts/dev_server.sh",
-    "client": "./scripts/dev_client.sh",
+    "ai": "cd third_party/ai_server && fastapi dev api.py && cd ../..",
+    "server": "cd server && npm run server && cd ..",
+    "client": "cd client && npx vite && cd ..",
+    "setup": "npm install && echo 🌱 Setting up client && cd client && npm install && npm run build && echo 🌱 Setting up server && cd ../server && npm install && cd ..",
     "dev": "concurrently -c auto npm:server npm:client --kill-others"
   },
   "repository": {

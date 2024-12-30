@@ -28,15 +28,7 @@ cd invoice_extraction_webapp
 ## 2. Set up environment and dependency
 
 ```bash
-npm install
-echo 🌱 Setting up client
-cd client
-npm install
-npm run build
-echo 🌱 Setting up server
-cd ../server
-npm install
-cd ..
+npm run setup
 ```
 
 ## 3. Set up AI server
