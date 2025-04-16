@@ -6,7 +6,7 @@
   <h3 align="center">Invoice Extraction</h3>
 
   <p align="center">
-    An web application that quickly and effortlessly converts invoice images into text!
+    An web application that quickly and effortlessly converts information in invoice images into json!
     <br />
     <a href="./HOW.md"><strong>Installation Guide »</strong></a>
   </p>
